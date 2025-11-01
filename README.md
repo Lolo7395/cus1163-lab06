@@ -340,14 +340,17 @@ Remember that calling `start()` on a thread runs the `run()` method in a new thr
 After completing the lab, think about these questions:
 
 1. What would happen if you used `notify()` instead of `notifyAll()`? Why might this cause problems?
-
+- if you use notify(), it only wakes one waiting thread. If it wakes the wrong one (like another producer instead of a consumer), the program might freeze.
+notifyAll() wakes all waiting threads so the right one can keep running.
 2. Why must `wait()` be called inside a `while` loop rather than an `if` statement? What problem does this solve?
-
+- Because things can change after a thread wakes up. Using while makes the thread check again to be sure it’s safe to continue. If you used if, it might keep going when it’s not supposed to.
 3. What would happen if the `produce()` method wasn't synchronized? Could two producers add items at the same time?
-
+- Without synchronized, two producers could add items at the same time. This can mess up the buffer or go over its limit.
 4. What happens if you forget to call `notifyAll()` in the `produce()` method? How would this affect the consumer thread?
-
+- Then consumers waiting for items will never wake up.The program would get stuck and stop running.
 5. Why does `wait()` release the lock? What would happen if it didn't?
+- wait() lets go of the lock so other threads can do their work. If it didn’t, nobody else could run, and the program would freeze, basically a deadlock.
+
 
 #### What You're Really Learning
 
